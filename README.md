@@ -10,3 +10,6 @@ Usage of this library is the same as the native Normalize method.
     //...
     string text = "cafe\u0301";
     string normalized = text.Normalize(NormalizationForm.FormC); //café
+
+## NuGet
+This library is available as a [NuGet package](https://www.nuget.org/packages/UnicodeNormalization/1.0.0).
