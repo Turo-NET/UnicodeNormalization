@@ -5,15 +5,16 @@ using System.Text;
 
 namespace UnicodeNormalization
 {
+	public enum NormalizationForm
+	{
+		FormC,
+		FormD,
+		FormKC,
+		FormKD,
+	}
+
 	public static class UNorm
 	{
-		public enum NormalizationForm
-		{
-			FormC,
-			FormD,
-			FormKC,
-			FormKD,
-		}
 
 		private static IEnumerator<UChar> CreateIterator(NormalizationForm mode, string str)
 		{

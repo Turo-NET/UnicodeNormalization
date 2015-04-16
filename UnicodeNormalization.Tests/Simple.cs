@@ -10,10 +10,10 @@ namespace UnicodeNormalization.Tests
 		public void SimpleExamples()
 		{
 			var str = "äiti";
-			Assert.AreEqual("\u00e4\u0069\u0074\u0069", UNorm.Normalize(str, UNorm.NormalizationForm.FormC));
-			Assert.AreEqual("\u0061\u0308\u0069\u0074\u0069", UNorm.Normalize(str, UNorm.NormalizationForm.FormD));
-			Assert.AreEqual("\u00e4\u0069\u0074\u0069", UNorm.Normalize(str, UNorm.NormalizationForm.FormKC));
-			Assert.AreEqual("\u0061\u0308\u0069\u0074\u0069", UNorm.Normalize(str, UNorm.NormalizationForm.FormKD));
+			Assert.AreEqual("\u00e4\u0069\u0074\u0069", UNorm.Normalize(str, NormalizationForm.FormC));
+			Assert.AreEqual("\u0061\u0308\u0069\u0074\u0069", UNorm.Normalize(str, NormalizationForm.FormD));
+			Assert.AreEqual("\u00e4\u0069\u0074\u0069", UNorm.Normalize(str, NormalizationForm.FormKC));
+			Assert.AreEqual("\u0061\u0308\u0069\u0074\u0069", UNorm.Normalize(str, NormalizationForm.FormKD));
 		}
 	}
 }

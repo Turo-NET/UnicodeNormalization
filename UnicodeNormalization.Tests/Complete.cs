@@ -49,10 +49,10 @@ namespace UnicodeNormalization.Tests
 					return String.Join("", p.Select(x => char.ConvertFromUtf32(x)));
 				}).ToList();
 
-			var nfd	= raw.Select(s => UNorm.Normalize(s, UNorm.NormalizationForm.FormD))	.ToList();
-			var nfkd	= raw.Select(s => UNorm.Normalize(s, UNorm.NormalizationForm.FormKD))	.ToList();
-			var nfc	= raw.Select(s => UNorm.Normalize(s, UNorm.NormalizationForm.FormC))	.ToList();
-			var nfkc	= raw.Select(s => UNorm.Normalize(s, UNorm.NormalizationForm.FormKC))	.ToList();
+			var nfd	= raw.Select(s => UNorm.Normalize(s, NormalizationForm.FormD))	.ToList();
+			var nfkd	= raw.Select(s => UNorm.Normalize(s, NormalizationForm.FormKD))	.ToList();
+			var nfc	= raw.Select(s => UNorm.Normalize(s, NormalizationForm.FormC))	.ToList();
+			var nfkc	= raw.Select(s => UNorm.Normalize(s, NormalizationForm.FormKC))	.ToList();
 
 			//NFC
 			Assert.AreEqual(nfc[0], raw[1], lineInfo.GetValue(test, (_) => null) + ": c2 != NFC(c1)");
