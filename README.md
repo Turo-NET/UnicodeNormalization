@@ -12,4 +12,4 @@ Usage of this library is the same as the native Normalize method.
     string normalized = text.Normalize(NormalizationForm.FormC); //café
 
 ## NuGet
-This library is available as a [NuGet package](https://www.nuget.org/packages/UnicodeNormalization/1.0.0).
+This library is available as a [NuGet package](https://www.nuget.org/packages/UnicodeNormalization/).
