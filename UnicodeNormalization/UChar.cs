@@ -48,6 +48,24 @@ namespace UnicodeNormalization
 			}
 		}
 
+		private static Dictionary<int, Dictionary<int, Feature>> generateUData()
+		{
+			return JsonConvert.DeserializeObject<Dictionary<int, Dictionary<int, JArray>>>(source).ToDictionary
+			(
+				x => x.Key,
+				x => x.Value.ToDictionary
+				(
+					y => y.Key,
+					y => new Feature
+					{
+						_0 = y.Value == null ? null : y.Value[0].Type == JTokenType.Null ? null : y.Value[0].Select(jv => (int)jv).ToArray(),
+						_1 = y.Value == null ? null : y.Value.Count < 2 ? null : y.Value[1].Type == JTokenType.Null ? null : (int?)y.Value[1],
+						_2 = y.Value == null ? null : y.Value.Count < 3 ? null : ((JObject)y.Value[2]).ToObject<Dictionary<int, int>>()
+					}
+				)
+			);
+		}
+
 		// Strategies
 		static Dictionary<int, UChar> cache = new Dictionary<int, UChar>();
 		static int[] cacheCounter = new int[256];

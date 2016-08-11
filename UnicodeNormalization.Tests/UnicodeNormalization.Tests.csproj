@@ -60,11 +60,6 @@
       <Name>UnicodeNormalization</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="NormalizationTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

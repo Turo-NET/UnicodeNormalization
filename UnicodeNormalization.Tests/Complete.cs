@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,35 +11,49 @@ namespace UnicodeNormalization.Tests
 	[TestClass]
 	public class Complete
 	{
-		ConditionalWeakTable<List<List<int>>, string> lineInfo = new ConditionalWeakTable<List<List<int>>, string>();
-		string utdata = File.ReadAllText("NormalizationTest.txt");
-		List<List<List<int>>> tests = new List<List<List<int>>>();
+		public static ConditionalWeakTable<List<List<int>>, string> lineInfo = new ConditionalWeakTable<List<List<int>>, string>();
+		public static List<List<List<int>>> tests = new List<List<List<int>>>();
 
-		public void Init()
+		[ClassInitialize]
+		public static void Init(TestContext context)
 		{
-			foreach (var _ in utdata.Split('\n').Select((line, lineNumber) => new { line = line.Length == 0 || line[0] == '@' || line[0] == '#' ? String.Empty : line.Split('#')[0], lineNumber = lineNumber + 1 }))
+			var request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://ftp.unicode.org/Public/UNIDATA/NormalizationTest.txt"));
+			request.UsePassive = false;
+			request.UseBinary = true;
+			request.Method = WebRequestMethods.Ftp.DownloadFile;
+			using (var response = (FtpWebResponse)request.GetResponse())
+			using (var stream = response.GetResponseStream())
+			using (var reader = new StreamReader(stream))
 			{
-				if (_.line == String.Empty) continue;
+				int lineNumber = 0;
+				string line;
+				while ((line = reader.ReadLine()) != null)
+				{
+					lineNumber++;
+					line = line.Length == 0 || line[0] == '@' || line[0] == '#' ? String.Empty : line.Split('#')[0];
 
-				// Columns (c1, c2,...) are separated by semicolons
-				// They have the following meaning: source; NFC; NFD; NFKC; NFKD
-				var _parts = _.line.Split(';');
+					if (line == String.Empty) continue;
 
-				Assert.IsTrue(_parts.Length == 6, "There should be five columns, not {0} -- line {1}", _parts.Length - 1, _.lineNumber);
-				Array.Resize(ref _parts, 5);
+					// Columns (c1, c2,...) are separated by semicolons
+					// They have the following meaning: source; NFC; NFD; NFKC; NFKD
+					var _parts = line.Split(';');
 
-				// split p
-				var parts = _parts.Select(p =>
-					{
-						return p.Split(' ').Select(x =>
-							{
-								return Convert.ToInt32(x, 16);
-							}).ToList();
-					}).ToList();
+					Assert.IsTrue(_parts.Length == 6, "There should be five columns, not {0} -- line {1}", _parts.Length - 1, lineNumber);
+					Array.Resize(ref _parts, 5);
 
-				lineInfo.Add(parts, _.lineNumber + ": " + _.line);
+					// split p
+					var parts = _parts.Select(p =>
+						{
+							return p.Split(' ').Select(x =>
+								{
+									return Convert.ToInt32(x, 16);
+								}).ToList();
+						}).ToList();
 
-				tests.Add(parts);
+					lineInfo.Add(parts, lineNumber + ": " + line);
+
+					tests.Add(parts);
+				}
 			}
 		}
 
@@ -83,8 +98,6 @@ namespace UnicodeNormalization.Tests
 		[TestMethod]
 		public void NormalizationTests()
 		{
-			Init();
-
 			foreach (var test in tests)
 			{
 				DoTest(test);
@@ -95,8 +108,6 @@ namespace UnicodeNormalization.Tests
 		[ExpectedException(typeof(AssertFailedException))]
 		public void ShouldFail()
 		{
-			Init();
-
 			// deep-copy test
 			var test = tests[0];
 			test[0][0] += 1;
